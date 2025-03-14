@@ -3,19 +3,24 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Eye, Pause, Play, Trash, Trash2 } from "lucide-react";
+import { Eye, Pause, Play, Trash2 } from "lucide-react";
 import Scanner from "@/components/Scanner";
+
+interface ScanResult {
+  barcode: string;
+  isDuplicate: boolean;
+}
 
 export default function Home() {
   // State untuk menyimpan riwayat scan (array string)
-  const [scannedHistory, setScannedHistory] = useState<string[]>([]);
+  const [scannedHistory, setScannedHistory] = useState<ScanResult[]>([]);
   // State untuk menampilkan barcode terakhir di Input
   const [lastScanned, setLastScanned] = useState<string>("");
   const [isScanning, setIsScanning] = useState<boolean>(false)
 
   const handleScan = (barcode: string, isDuplicate: boolean) => {
     setLastScanned(barcode);
-    setScannedHistory((prev) => [...prev, barcode]);
+    setScannedHistory((prev) => [...prev, {barcode, isDuplicate}]);
   };
 
   // Fungsi reset untuk mengosongkan history dan input
@@ -56,7 +61,7 @@ export default function Home() {
                   <div className="text-wrap p-2 max-h-[300px] overflow-y-scroll">
                   <div className="flex flex-col-reverse">
                     {scannedHistory.map((code, idx) => (
-                      <p className='text-wrap' key={idx}>{code}</p>
+                      <p className={`font-mono ${code.isDuplicate ? "text-destructive" : "text-primary"}`} key={idx}>{code.barcode}</p>
                     ))}
                   </div>
                   </div>
