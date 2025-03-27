@@ -11,7 +11,11 @@
     pkgs.bun
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    # Tambahkan variabel lingkungan yang diperlukan untuk perangkat lokal
+    NODE_ENV = "development";
+    PORT = "3000";
+  };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -21,6 +25,8 @@
       # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
         npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing";
+        # Tambahkan perintah untuk memastikan dependensi diinstal
+        setup-local = "nix-shell --run 'npm ci'";
         # Open editors for the following files by default, if they exist:
         default.openFiles = [
           # Cover all the variations of language, src-dir, router (app/pages)
